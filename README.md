@@ -258,3 +258,31 @@ gradlew.bat test --tests "org.scoula.jdbc_ex.CrudTest"
 | 2 | DB 연결 | `DriverManager.getConnection(url, id, pw)` |
 | 3 | SQL 실행 | `Connection.prepareStatement(sql)` |
 | 4 | 자원 해제 | `Connection.close()`, `PreparedStatement.close()` |
+
+<hr>
+<img width="2705" height="1837" alt="image" src="https://github.com/user-attachments/assets/db616ab7-1ff5-4942-84b5-65797afe9c54" />
+<img width="965" height="1484" alt="image" src="https://github.com/user-attachments/assets/6cf9c1f1-61e6-4602-9862-6f1ee113907c" />
+<img width="2365" height="1850" alt="image" src="https://github.com/user-attachments/assets/1b0ae863-c91f-4662-8f8d-5ee245c4949f" />
+
+<img width="1455" height="363" alt="image" src="https://github.com/user-attachments/assets/4e62b740-c637-42f8-b0a1-7163f2cdcf99" />
+<img width="1317" height="874" alt="image" src="https://github.com/user-attachments/assets/722e00de-299f-4abf-90d1-a60fff96dcbf" />
+<img width="951" height="1477" alt="image" src="https://github.com/user-attachments/assets/eb290082-815f-4b4b-828a-60b65cf218c7" />
+<img width="951" height="1477" alt="image" src="https://github.com/user-attachments/assets/4b096adf-8ed5-4f1a-ab46-0abcb2673058" />
+<img width="1813" height="1192" alt="image" src="https://github.com/user-attachments/assets/794856d2-68d4-46c2-a02e-76d6acd5a40b" />
+<img width="1478" height="1175" alt="image" src="https://github.com/user-attachments/assets/472a2384-f396-43ec-ab78-93b614de978f" />
+
+<br>
+<hr>
+<br>
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/3bf2ad14-bde7-4cd1-9ff0-97a7c590bc9f" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/75371045-35a1-4357-8b9d-ca725e0bb93d" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/674e605b-4a18-49fc-a9c9-299adb076e40" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/ad6d35fe-7556-46d5-b9b6-06a6b6d0cd95" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f024fcf0-4939-4dc0-a521-e02cef243cd7" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/7b36b654-2569-4e96-bf3b-869f22312fbd" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f6d35c7f-d231-44ab-afaf-9c62898d3b66" />
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/011df47e-5120-437f-a4a9-cadee2824193" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/c77bf119-d4cd-4de5-a8ee-60a6cc300e3b" />
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/99fe26f1-ba14-4d57-9060-7424050ff9bc" />
+
+
