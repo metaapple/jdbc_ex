@@ -267,7 +267,7 @@ gradlew.bat test --tests "org.scoula.jdbc_ex.CrudTest"
 <img width="1455" height="363" alt="image" src="https://github.com/user-attachments/assets/4e62b740-c637-42f8-b0a1-7163f2cdcf99" />
 <img width="1317" height="874" alt="image" src="https://github.com/user-attachments/assets/722e00de-299f-4abf-90d1-a60fff96dcbf" />
 <img width="951" height="1477" alt="image" src="https://github.com/user-attachments/assets/eb290082-815f-4b4b-828a-60b65cf218c7" />
-<img width="951" height="1477" alt="image" src="https://github.com/user-attachments/assets/4b096adf-8ed5-4f1a-ab46-0abcb2673058" />
+
 <img width="1813" height="1192" alt="image" src="https://github.com/user-attachments/assets/794856d2-68d4-46c2-a02e-76d6acd5a40b" />
 <img width="1478" height="1175" alt="image" src="https://github.com/user-attachments/assets/472a2384-f396-43ec-ab78-93b614de978f" />
 
