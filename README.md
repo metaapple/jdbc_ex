@@ -275,12 +275,12 @@ gradlew.bat test --tests "org.scoula.jdbc_ex.CrudTest"
 <hr>
 <br>
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/3bf2ad14-bde7-4cd1-9ff0-97a7c590bc9f" />
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/75371045-35a1-4357-8b9d-ca725e0bb93d" />
+
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/674e605b-4a18-49fc-a9c9-299adb076e40" />
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/ad6d35fe-7556-46d5-b9b6-06a6b6d0cd95" />
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f024fcf0-4939-4dc0-a521-e02cef243cd7" />
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/7b36b654-2569-4e96-bf3b-869f22312fbd" />
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f6d35c7f-d231-44ab-afaf-9c62898d3b66" />
+
 <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/011df47e-5120-437f-a4a9-cadee2824193" />
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/c77bf119-d4cd-4de5-a8ee-60a6cc300e3b" />
 <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/99fe26f1-ba14-4d57-9060-7424050ff9bc" />
