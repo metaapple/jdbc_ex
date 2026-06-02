@@ -1,6 +1,7 @@
 # JDBC Ex
 
-Java JDBC 연습 프로젝트입니다. MySQL 데이터베이스에 연결하고, `PreparedStatement`를 사용해 CRUD(Create, Read, Update, Delete) 작업을 수행합니다. JUnit 5로 단계별 테스트를 진행합니다.
+Java JDBC 연습 프로젝트입니다. MySQL 데이터베이스에 연결하고, `PreparedStatement`를 사용해 CRUD 작업을 수행합니다.  
+초기에는 JDBC를 직접 사용하고, 이후 **DAO(Data Access Object) 패턴**으로 DB 접근 로직을 분리합니다. JUnit 5로 단계별 테스트를 진행합니다.
 
 ---
 
@@ -11,6 +12,16 @@ graph TD
     subgraph "테스트 계층"
         CT[ConnectionTest]
         CR[CrudTest]
+        UDT[UserDaoTest]
+    end
+
+    subgraph "DAO 계층"
+        UD[UserDao<br/>interface]
+        UDI[UserDaoImpl]
+    end
+
+    subgraph "도메인 계층"
+        UVO[UserVO]
     end
 
     subgraph "공통 계층"
@@ -26,9 +37,49 @@ graph TD
     CT -->|직접 연결| DB
     CT -->|getConnection / close| JU
     CR -->|getConnection / close| JU
+    UDT --> UDI
+    UDI -->|implements| UD
+    UDI --> UVO
+    UDI --> JU
     JU -->|설정 로드| AP
     JU -->|Connection| DB
     SQL -->|스키마 생성| DB
+```
+
+---
+
+## 계층 구조 (DAO 패턴)
+
+```mermaid
+flowchart TB
+    subgraph Test["테스트 (UserDaoTest)"]
+        T1[create]
+        T2[getList]
+        T3[get]
+        T4[update]
+        T5[delete]
+    end
+
+    subgraph DAO["DAO 계층"]
+        IF[UserDao<br/>인터페이스]
+        IMPL[UserDaoImpl<br/>구현체]
+    end
+
+    subgraph Domain["도메인"]
+        VO[UserVO]
+    end
+
+    subgraph Common["공통"]
+        JDBC[JDBCUtil]
+    end
+
+    DB[(USERS 테이블)]
+
+    Test --> IF
+    IF --> IMPL
+    IMPL --> VO
+    IMPL --> JDBC
+    JDBC --> DB
 ```
 
 ---
@@ -63,15 +114,58 @@ sequenceDiagram
 | 경로 | 역할 | 설명 |
 |------|------|------|
 | `src/main/java/org/scoula/jdbc_ex/common/JDBCUtil.java` | DB 연결 유틸 | static 블록으로 드라이버 로딩 및 Connection 생성 |
+| `src/main/java/org/scoula/jdbc_ex/domain/UserVO.java` | 도메인 객체 | `users` 테이블과 매핑되는 Value Object |
+| `src/main/java/org/scoula/jdbc_ex/dao/UserDao.java` | DAO 인터페이스 | CRUD 기능을 추상 메서드로 정의 |
+| `src/main/java/org/scoula/jdbc_ex/dao/UserDaoImpl.java` | DAO 구현체 | JDBC + PreparedStatement로 CRUD 구현 |
 | `src/main/resources/application.properties` | DB 설정 | 드라이버, URL, 계정 정보 |
 | `src/test/java/org/scoula/jdbc_ex/ConnectionTest.java` | 연결 테스트 | JDBC 직접 연결 / JDBCUtil 연결 검증 |
-| `src/test/java/org/scoula/jdbc_ex/CrudTest.java` | CRUD 테스트 | INSERT 등 SQL 실행 테스트 |
+| `src/test/java/org/scoula/jdbc_ex/CrudTest.java` | CRUD 테스트 | INSERT 등 SQL 직접 실행 테스트 |
+| `src/test/java/org/scoula/jdbc_ex/dao/UserDaoTest.java` | DAO 테스트 | UserDaoImpl CRUD 단위 테스트 |
 | `users.sql` | DB 초기화 | DB·테이블 생성 및 샘플 데이터 |
 | `build.gradle` | 빌드 설정 | MySQL Connector, Lombok, JUnit 5 의존성 |
 
 ---
 
 ## 클래스 / 메서드 정리
+
+### UserVO (도메인)
+
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `id` | `String` | 사용자 아이디 |
+| `password` | `String` | 비밀번호 |
+| `name` | `String` | 이름 |
+| `role` | `String` | 권한 (`USER`, `ADMIN`) |
+
+> Lombok `@Data`, `@NoArgsConstructor`, `@AllArgsConstructor` 적용
+
+### UserDao (인터페이스)
+
+| 메서드 | 반환 타입 | 설명 |
+|--------|-----------|------|
+| `create(UserVO user)` | `int` | 회원 등록 (INSERT) |
+| `getList()` | `List<UserVO>` | 회원 목록 조회 (SELECT) |
+| `get(String id)` | `Optional<UserVO>` | 회원 단건 조회 (SELECT) |
+| `update(UserVO user)` | `int` | 회원 수정 (UPDATE) |
+| `delete(String id)` | `int` | 회원 삭제 (DELETE) |
+
+### UserDaoImpl (구현체)
+
+| SQL 상수 | SQL |
+|----------|-----|
+| `USER_LIST` | `SELECT * FROM users` |
+| `USER_GET` | `SELECT * FROM users WHERE id = ?` |
+| `USER_INSERT` | `INSERT INTO users VALUES(?, ?, ?, ?)` |
+| `USER_UPDATE` | `UPDATE users SET name = ?, role = ? WHERE id = ?` |
+| `USER_DELETE` | `DELETE FROM users WHERE id = ?` |
+
+| 메서드 | 구현 상태 | 설명 |
+|--------|-----------|------|
+| `create()` | ✅ 완료 | try-with-resources로 INSERT 실행 |
+| `getList()` | 🔲 미구현 | `List.of()` 반환 |
+| `get()` | 🔲 미구현 | `Optional.empty()` 반환 |
+| `update()` | 🔲 미구현 | `0` 반환 |
+| `delete()` | 🔲 미구현 | `0` 반환 |
 
 ### JDBCUtil
 
@@ -93,6 +187,17 @@ sequenceDiagram
 |--------|----------|-------------|
 | `insertUser()` | 1 | `users` 테이블에 회원 INSERT |
 | `close()` | `@AfterAll` | 모든 테스트 후 Connection 종료 |
+
+### UserDaoTest
+
+| 메서드 | 테스트 내용 | 구현 상태 |
+|--------|-------------|-----------|
+| `create()` | `UserDaoImpl.create()` — 회원 등록 | ✅ 완료 |
+| `getList()` | 회원 목록 조회 | 🔲 미구현 |
+| `get()` | 회원 단건 조회 | 🔲 미구현 |
+| `update()` | 회원 수정 | 🔲 미구현 |
+| `delete()` | 회원 삭제 | 🔲 미구현 |
+| `tearDown()` | `@AfterAll` — Connection 종료 | ✅ 완료 |
 
 ---
 
@@ -205,6 +310,83 @@ int row = pstmt.executeUpdate(); // 영향받은 행 수 반환
 pstmt.close();
 ```
 
+### 4. UserVO — 도메인 객체 (UserVO)
+
+DB 테이블의 한 행(row)을 Java 객체로 표현합니다. Lombok으로 getter/setter/생성자를 자동 생성합니다.
+
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserVO {
+    private String id;
+    private String password;
+    private String name;
+    private String role;
+}
+```
+
+### 5. UserDao — 인터페이스 (UserDao)
+
+구현 클래스가 반드시 제공해야 할 CRUD 기능을 추상 메서드로 정의합니다.
+
+```java
+public interface UserDao {
+    int create(UserVO user) throws SQLException;
+    List<UserVO> getList() throws SQLException;
+    Optional<UserVO> get(String id) throws SQLException;
+    int update(UserVO user) throws SQLException;
+    int delete(String id) throws SQLException;
+}
+```
+
+### 6. UserDaoImpl — DAO 구현 (UserDaoImpl)
+
+인터페이스를 구현하고, SQL을 클래스 내부 상수로 관리합니다.  
+`try-with-resources`로 `PreparedStatement`를 자동 close합니다.
+
+```java
+public class UserDaoImpl implements UserDao {
+    Connection conn = JDBCUtil.getConnection();
+
+    private String USER_INSERT = "insert into users values(?, ?, ?, ?)";
+
+    @Override
+    public int create(UserVO user) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(USER_INSERT)) {
+            stmt.setString(1, user.getId());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getName());
+            stmt.setString(4, user.getRole());
+            return stmt.executeUpdate();
+        }
+    }
+}
+```
+
+### 7. UserDaoTest — TDD 방식 테스트
+
+테스트를 먼저 작성하고, DAO 구현체를 단계적으로 완성합니다.
+
+```java
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class UserDaoTest {
+    UserDao dao = new UserDaoImpl();
+
+    @AfterAll
+    static void tearDown() {
+        JDBCUtil.close();
+    }
+
+    @Test
+    void create() throws SQLException {
+        UserVO user = new UserVO("app", "1234", "app", "admin");
+        int count = dao.create(user);
+        Assertions.assertEquals(1, count);
+    }
+}
+```
+
 ---
 
 ## 테스트 실행 흐름
@@ -213,12 +395,17 @@ pstmt.close();
 flowchart LR
     A[JUnit 실행] --> B[ConnectionTest]
     A --> C[CrudTest]
+    A --> D[UserDaoTest]
 
     B --> B1[testConnection<br/>직접 JDBC 연결]
     B --> B2[testConnection2<br/>JDBCUtil 연결]
 
     C --> C1["@Order(1) insertUser<br/>회원 INSERT"]
     C --> C2["@AfterAll close<br/>Connection 종료"]
+
+    D --> D1[create<br/>DAO INSERT 테스트]
+    D --> D2[getList / get / update / delete<br/>추후 구현]
+    D --> D3["@AfterAll tearDown<br/>Connection 종료"]
 ```
 
 ### 테스트 실행 명령
@@ -236,6 +423,7 @@ gradlew.bat test
 ```bash
 gradlew.bat test --tests "org.scoula.jdbc_ex.ConnectionTest"
 gradlew.bat test --tests "org.scoula.jdbc_ex.CrudTest"
+gradlew.bat test --tests "org.scoula.jdbc_ex.dao.UserDaoTest"
 ```
 
 ---
@@ -258,6 +446,21 @@ gradlew.bat test --tests "org.scoula.jdbc_ex.CrudTest"
 | 2 | DB 연결 | `DriverManager.getConnection(url, id, pw)` |
 | 3 | SQL 실행 | `Connection.prepareStatement(sql)` |
 | 4 | 자원 해제 | `Connection.close()`, `PreparedStatement.close()` |
+
+---
+
+## 학습 진행 순서
+
+```mermaid
+flowchart TD
+    S1["1단계: JDBC 직접 연결<br/>(ConnectionTest)"]
+    S2["2단계: JDBCUtil 공통화<br/>(static 블록)"]
+    S3["3단계: PreparedStatement CRUD<br/>(CrudTest)"]
+    S4["4단계: DAO 패턴 도입<br/>(UserVO + UserDao + UserDaoImpl)"]
+    S5["5단계: TDD로 CRUD 완성<br/>(UserDaoTest)"]
+
+    S1 --> S2 --> S3 --> S4 --> S5
+```
 
 <hr>
 <img width="2705" height="1837" alt="image" src="https://github.com/user-attachments/assets/db616ab7-1ff5-4942-84b5-65797afe9c54" />
@@ -284,5 +487,3 @@ gradlew.bat test --tests "org.scoula.jdbc_ex.CrudTest"
 <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/011df47e-5120-437f-a4a9-cadee2824193" />
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/c77bf119-d4cd-4de5-a8ee-60a6cc300e3b" />
 <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/99fe26f1-ba14-4d57-9060-7424050ff9bc" />
-
-
