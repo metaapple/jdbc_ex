@@ -487,3 +487,12 @@ flowchart TD
 <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/011df47e-5120-437f-a4a9-cadee2824193" />
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/c77bf119-d4cd-4de5-a8ee-60a6cc300e3b" />
 <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/99fe26f1-ba14-4d57-9060-7424050ff9bc" />
+
+<hr>
+<br>
+- 인터페이스/클래스 <br>
+<img width="2008" height="686" alt="image" src="https://github.com/user-attachments/assets/c80f76ce-5f0d-4f99-a617-3782cb7c4aba" />
+<img width="2927" height="1818" alt="image" src="https://github.com/user-attachments/assets/3f6c92cc-e4f1-48a3-b3e1-b9628399e8f8" />
+
+
+
