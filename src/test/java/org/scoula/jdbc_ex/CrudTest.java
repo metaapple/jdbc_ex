@@ -6,9 +6,7 @@ package org.scoula.jdbc_ex;
 import org.junit.jupiter.api.*;
 import org.scoula.jdbc_ex.common.JDBCUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CrudTest {
@@ -27,7 +25,7 @@ public class CrudTest {
     public void insertUser() throws SQLException {
         String sql = "insert into users(id, password, name, role) values(?, ?, ?, ?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, "winner2");
+        pstmt.setString(1, "winner3");
         pstmt.setString(2, "1234");
         pstmt.setString(3, "win");
         pstmt.setString(4, "admin");
@@ -37,4 +35,53 @@ public class CrudTest {
         Assertions.assertEquals(1, row);
         pstmt.close();
     }
+
+    @Test
+    @DisplayName("user 목록 조회 테스트")
+    @Order(2)
+    public void selectUser() throws SQLException {
+        //JDBC 단계 1,2
+        //JDBC 단계 3 - sql문 정함.
+        String sql = "select * from users";
+        //JDBC 단계 4 - sql객체 생성
+        try (Statement stmt = con.createStatement();
+             //JDBC 단계 5 - sql 전송(mysql서버로)
+             ResultSet rs = stmt.executeQuery(sql);
+        ) {
+            //JDBC 단계 6 - sql 결과를 받아와서 처리
+            while (rs.next()) {
+                String name = rs.getString("name");
+                System.out.println(name);
+            }
+        }
+    }
+
+        @Test
+        @DisplayName("user 상세 조회 테스트")
+        @Order(3)
+        public void selectUserById() throws SQLException {
+            //JDBC 단계 1,2
+            //JDBC 단계 3 - sql문 정함.
+            String sql = "select * from users where id = ?";
+            //JDBC 단계 4 - sql객체 생성
+            try (PreparedStatement stmt = con.prepareStatement(sql)) {
+                stmt.setString(1, "admin");
+
+                //JDBC 단계 5 - sql 전송(mysql서버로))
+                try (ResultSet rs = stmt.executeQuery()) {
+                    //JDBC 단계 6 - sql 결과를 받아와서 처리
+                    if (rs.next()) {
+                        String name = rs.getString("name");
+                        System.out.println(name);
+                        String role = rs.getString("role");
+                        System.out.println(role);
+                    }
+                }
+            }
+        }
+
+        //JDBC 단계 7 - close
+//        stmt.close();
+//        rs.close();
+
 }
